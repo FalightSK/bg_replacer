@@ -18,12 +18,12 @@ class functional_interface:
         ## Sub components
 
         # bg sub
-        self.bg_layout.add_widget(Label(text="BG-Color"))
+        self.bg_layout.add_widget(Label(text="Replace Mode"))
         bg_color_layout = GridLayout(cols=2)
-        self.green_btn = Button(text='Green', background_color=[0.5, 1, 0.5, 1])
-        self.blue_btn = Button(text='Blue', background_color=[0.5, 0.5, 1, 1])
-        bg_color_layout.add_widget(self.green_btn)
-        bg_color_layout.add_widget(self.blue_btn)
+        self.fullRes_btn = Button(text='fullRes')
+        self.fitBg_btn = Button(text='fitBg')
+        bg_color_layout.add_widget(self.fullRes_btn)
+        bg_color_layout.add_widget(self.fitBg_btn)
         self.bg_layout.add_widget(bg_color_layout)
 
         self.bg_layout.add_widget(Label(text="BG-Mode"))
@@ -46,12 +46,12 @@ class functional_interface:
         self.upload_btn = Button(text='Upload Source')
         self.util_layout.add_widget(self.upload_btn)
 
-        self.util_layout.add_widget(Label(text='Replacing Mode'))
+        self.util_layout.add_widget(Label(text='Chroma-Source'))
         re_mode = GridLayout(cols=2)
-        self.free_btn = Button(text='Free')
-        self.fit_btn = Button(text='Fit')
-        re_mode.add_widget(self.free_btn)
-        re_mode.add_widget(self.fit_btn)
+        self.ccam_btn = Button(text='Cam')
+        self.cvid_btn = Button(text='Vid')
+        re_mode.add_widget(self.ccam_btn)
+        re_mode.add_widget(self.cvid_btn)
         self.util_layout.add_widget(re_mode)
 
         self.record_btn = Button(text='Start Recording')

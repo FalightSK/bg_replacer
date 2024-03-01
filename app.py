@@ -33,18 +33,22 @@ class KivyCVApp(App):
         # Initiate functional layout
         self.func_layout = functional_interface(size=0.3)
         self.func_layout.set_btn_func(
-            btn1 = self.func_layout.green_btn,
-            btn2 = self.func_layout.blue_btn,
+            btn1 = self.func_layout.fullRes_btn,
+            btn2 = self.func_layout.fitBg_btn,
             btn3 = self.func_layout.img_btn,
             btn4 = self.func_layout.vid_btn,
             btn5 = self.func_layout.upload_btn,
             btn6 = self.func_layout.record_btn,
-            func1 = self.on_Green_mode,
-            func2 = self.on_Blue_mode,
+            btn7 = self.func_layout.ccam_btn,
+            btn8 = self.func_layout.cvid_btn,
+            func1 = self.on_replace_mode,
+            func2 = self.on_replace_mode,
             func3 = self.on_bg_mode,
             func4 = self.on_bg_mode,
             func5 = self.on_upload,
-            func6 = self.on_record
+            func6 = self.on_record,
+            func7 = self.on_source_type,
+            func8 = self.on_source_type
         )
         self.func_layout.Ip_input.bind(on_text_validate=self.on_enter_ip)
         main_layout.add_widget(self.func_layout.func_layout)
@@ -69,6 +73,10 @@ class KivyCVApp(App):
 
         self.is_rec = 0
         self.recoder = None
+
+        self.source_type_cam = 1
+
+        self.is_fullRes = 1
 
         # HS color chart
         self.chart = cv2.imread(os.path.join(os.getcwd(), 'src', 'HSV_chart.png'))
@@ -117,7 +125,9 @@ class KivyCVApp(App):
                 frame, 
                 np.array(self.upperHSV, dtype=np.int16), 
                 np.array(self.lowerHSV, dtype=np.int16), 
-                replace
+                replace,
+                int(self.controls_layout.offset.value),
+                self.is_fullRes
                 )
 
             if self.is_rec:
@@ -141,19 +151,11 @@ class KivyCVApp(App):
         self.lowerHSV = [self.colRange[0], self.SatRange[0], self.ValRange[0]]
         self.upperHSV = [self.colRange[1], self.SatRange[1], self.ValRange[1]]
 
-    def on_Green_mode(self, instance):
-        self.colRange = [40, 70]
-        self.lowerHSV = [self.colRange[0], self.SatRange[0], self.ValRange[0]]
-        self.upperHSV = [self.colRange[1], self.SatRange[1], self.ValRange[1]]
-        self.controls_layout.ColMin.value = 40
-        self.controls_layout.ColMax.value = 70
-
-    def on_Blue_mode(self, instance):
-        self.colRange = [100, 135]
-        self.lowerHSV = [self.colRange[0], self.SatRange[0], self.ValRange[0]]
-        self.upperHSV = [self.colRange[1], self.SatRange[1], self.ValRange[1]]
-        self.controls_layout.ColMin.value = 100
-        self.controls_layout.ColMax.value = 135
+    def on_replace_mode(self, instance):
+        if instance.text == 'fullRes':
+            self.is_fullRes = 1
+        elif instance.text == 'fitBg':
+            self.is_fullRes = 0
 
     def on_bg_mode(self, instance):
         if instance.text == 'Image':
@@ -196,9 +198,21 @@ class KivyCVApp(App):
 
         # Close the popup
         self.popup.dismiss()
+    
+    def on_source_type(self, instance):
+        if instance.text == 'Cam':
+            self.source_type_cam = 1
+        elif instance.text == 'Vid':
+            self.source_type_cam = 0
+        print('enter')
 
     def on_enter_ip(self, instance):
-        self.capture.open('http://' + self.func_layout.Ip_input.text + '/')
+        if self.source_type_cam:
+            self.capture = cv2.VideoCapture()
+            self.capture.open('http://' + self.func_layout.Ip_input.text + '/')
+        else:
+            # Input must be abs path to video
+            self.capture = cv2.VideoCapture(os.path.join(os.getcwd(), 'src', self.func_layout.Ip_input.text))
 
     def on_record(self, instance):
         self.is_rec = not self.is_rec

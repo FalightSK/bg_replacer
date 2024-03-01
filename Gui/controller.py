@@ -13,10 +13,12 @@ class controller_interface:
         self.upper_controls_layout = GridLayout(cols=3, padding=2)
 
         # Sliders
-        self.ColMin = Slider(min=0, max=180, value=65, orientation='vertical')
-        self.SatMin = Slider(min=0, max=255, value=45, orientation='vertical')
-        self.ValMin = Slider(min=0, max=255, value=125, orientation='vertical')
-        self.ColMax = Slider(min=0, max=180, value=135, orientation='vertical')
+        # Anya [49, 123, 124] [74, 255, 255]
+
+        self.ColMin = Slider(min=0, max=180, value=49, orientation='vertical')
+        self.SatMin = Slider(min=0, max=255, value=123, orientation='vertical')
+        self.ValMin = Slider(min=0, max=255, value=124, orientation='vertical')
+        self.ColMax = Slider(min=0, max=180, value=74, orientation='vertical')
         self.SatMax = Slider(min=0, max=255, value=255, orientation='vertical')
         self.ValMax = Slider(min=0, max=255, value=255, orientation='vertical')
 
@@ -39,7 +41,15 @@ class controller_interface:
         self.lowerName = Label(text="Lowerbound", size_hint_y=0.2)
         self.upperName = Label(text="Upperbound", size_hint_y=0.2)
 
+        # Box layout for dilation and erosion
+        offset_lay = BoxLayout(size_hint_y=0.25, orientation='vertical')
+        self.offset = Slider(min=-5, max=5, value=0, orientation='horizontal')
+        offset_title = Label(text="Boarder Offset")
+        offset_lay.add_widget(offset_title)
+        offset_lay.add_widget(self.offset)
+
         self.update_layout()
+        self.controls_layout.add_widget(offset_lay)
 
     def update_layout(self):
         self.controls_layout.add_widget(self.lowerName)

@@ -1,1 +1,4 @@
 /green
+
+__pycache__/
+*.py[cod]
